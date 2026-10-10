@@ -1,0 +1,417 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Student Management System - Portal for Academic Performance, Attendance, and Student Profile Management.">
+    <title>EduPulse | Student Management Portal</title>
+    
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800&family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+    
+    <!-- FontAwesome Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    
+    <!-- Custom CSS -->
+    <link rel="stylesheet" href="css/styles.css">
+</head>
+<body class="dark-theme">
+
+    <!-- Toast Notification System -->
+    <div id="toast-container" class="toast-container"></div>
+
+    <!-- ==================================================================== -->
+    <!-- 1. LOGIN SECTION -->
+    <!-- ==================================================================== -->
+    <section id="login-section" class="auth-section">
+        <div class="auth-bg-shapes">
+            <div class="shape shape-1"></div>
+            <div class="shape shape-2"></div>
+            <div class="shape shape-3"></div>
+        </div>
+
+        <div class="auth-card glass-panel">
+            <div class="auth-header">
+                <div class="brand-badge">
+                    <i class="fa-solid fa-graduation-cap"></i>
+                    <span>EduPulse Portal</span>
+                </div>
+                <h2>Student Portal Login</h2>
+                <p>Enter your registration number and password to access your academic dashboard.</p>
+            </div>
+
+            <!-- Demo Credentials Helper Banner -->
+            <div class="demo-credentials-box">
+                <div class="demo-box-header">
+                    <i class="fa-solid fa-key"></i>
+                    <span>Quick Demo Login Credentials</span>
+                </div>
+                <div class="demo-buttons">
+                    <button type="button" class="btn-demo-chip" data-reg="REG2026001" data-pass="Password@123">
+                        <i class="fa-solid fa-user-graduate"></i> Alex Morgan (CS)
+                    </button>
+                    <button type="button" class="btn-demo-chip" data-reg="REG2026002" data-pass="Student@456">
+                        <i class="fa-solid fa-brain"></i> Sophia Chen (AI)
+                    </button>
+                    <button type="button" class="btn-demo-chip" data-reg="REG2026003" data-pass="Pass@789">
+                        <i class="fa-solid fa-laptop-code"></i> Marcus Vance (IT)
+                    </button>
+                </div>
+            </div>
+
+            <form id="login-form" class="auth-form" novalidate>
+                <div class="form-group">
+                    <label for="register-number"><i class="fa-solid fa-id-card"></i> Register Number</label>
+                    <div class="input-wrapper">
+                        <input 
+                            type="text" 
+                            id="register-number" 
+                            name="register_number" 
+                            placeholder="e.g. REG2026001" 
+                            required 
+                            autocomplete="username"
+                            maxlength="20"
+                        >
+                        <i class="fa-solid fa-check-circle valid-icon"></i>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label for="password"><i class="fa-solid fa-lock"></i> Password</label>
+                    <div class="input-wrapper">
+                        <input 
+                            type="password" 
+                            id="password" 
+                            name="password" 
+                            placeholder="Enter your password" 
+                            required 
+                            autocomplete="current-password"
+                        >
+                        <button type="button" id="toggle-password" class="btn-toggle-pass" aria-label="Toggle password visibility">
+                            <i class="fa-solid fa-eye" id="pass-eye-icon"></i>
+                        </button>
+                    </div>
+                </div>
+
+                <div id="login-error-msg" class="error-banner hidden">
+                    <i class="fa-solid fa-circle-exclamation"></i>
+                    <span id="error-text">Invalid login credentials</span>
+                </div>
+
+                <button type="submit" id="btn-login" class="btn-primary btn-block">
+                    <span class="btn-text">Sign In to Dashboard</span>
+                    <span class="btn-loader hidden"><i class="fa-solid fa-spinner fa-spin"></i> Authenticating...</span>
+                </button>
+            </form>
+
+            <div class="auth-footer">
+                <p><i class="fa-solid fa-shield-halved"></i> Protected with server-side bcrypt & HTTP-only JWT sessions.</p>
+            </div>
+        </div>
+    </section>
+
+    <!-- ==================================================================== -->
+    <!-- 2. MAIN DASHBOARD SECTION -->
+    <!-- ==================================================================== -->
+    <div id="dashboard-section" class="dashboard-wrapper hidden">
+        
+        <!-- Sidebar Navigation -->
+        <aside class="sidebar glass-panel">
+            <div class="sidebar-header">
+                <div class="logo-icon">
+                    <i class="fa-solid fa-graduation-cap"></i>
+                </div>
+                <div class="logo-text">
+                    <h3>EduPulse</h3>
+                    <span class="system-tag">Student Portal</span>
+                </div>
+            </div>
+
+            <div class="student-mini-card">
+                <img id="sidebar-avatar" src="https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&q=80&w=250" alt="Student Avatar" class="student-avatar-img">
+                <div class="mini-card-info">
+                    <h4 id="sidebar-name">Student Name</h4>
+                    <span id="sidebar-reg" class="reg-badge">REG2026001</span>
+                </div>
+            </div>
+
+            <nav class="sidebar-nav">
+                <button class="nav-item active" data-tab="tab-overview">
+                    <i class="fa-solid fa-chart-pie"></i>
+                    <span>Overview</span>
+                </button>
+                <button class="nav-item" data-tab="tab-courses">
+                    <i class="fa-solid fa-book-bookmark"></i>
+                    <span>Courses & Grades</span>
+                </button>
+                <button class="nav-item" data-tab="tab-attendance">
+                    <i class="fa-solid fa-user-check"></i>
+                    <span>Attendance</span>
+                </button>
+                <button class="nav-item" data-tab="tab-profile">
+                    <i class="fa-solid fa-id-card-clip"></i>
+                    <span>My Profile</span>
+                </button>
+            </nav>
+
+            <div class="sidebar-footer">
+                <button id="btn-theme-toggle" class="btn-theme-toggle">
+                    <i class="fa-solid fa-moon" id="theme-icon"></i>
+                    <span id="theme-text">Dark Mode</span>
+                </button>
+                <button id="btn-logout" class="btn-logout">
+                    <i class="fa-solid fa-right-from-bracket"></i>
+                    <span>Sign Out</span>
+                </button>
+            </div>
+        </aside>
+
+        <!-- Main Content Area -->
+        <main class="main-content">
+            
+            <!-- Top App Bar -->
+            <header class="top-bar glass-panel">
+                <div class="top-bar-title">
+                    <h1 id="page-title">Academic Overview</h1>
+                    <p id="system-status-indicator" class="status-indicator">
+                        <span class="status-dot green"></span>
+                        <span id="backend-mode-label">Supabase Connected</span>
+                    </p>
+                </div>
+
+                <div class="top-bar-actions">
+                    <div class="quick-stat-badge">
+                        <i class="fa-solid fa-award"></i>
+                        <span>GPA: <strong id="topbar-gpa">3.88</strong></span>
+                    </div>
+                    <div class="user-profile-pill">
+                        <img id="topbar-avatar" src="https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&q=80&w=250" alt="Avatar" class="avatar-sm">
+                        <span id="topbar-name">Student</span>
+                    </div>
+                </div>
+            </header>
+
+            <!-- TAB 1: OVERVIEW -->
+            <section id="tab-overview" class="tab-content active">
+                
+                <!-- Stat Metric Cards -->
+                <div class="metrics-grid">
+                    <div class="metric-card glass-panel">
+                        <div class="metric-icon blue">
+                            <i class="fa-solid fa-graduation-cap"></i>
+                        </div>
+                        <div class="metric-info">
+                            <span class="metric-label">Cumulative GPA</span>
+                            <h3 id="stat-gpa" class="metric-value">3.88</h3>
+                            <span class="metric-subtext green-text"><i class="fa-solid fa-arrow-up"></i> Top 5% of Department</span>
+                        </div>
+                    </div>
+
+                    <div class="metric-card glass-panel">
+                        <div class="metric-icon green">
+                            <i class="fa-solid fa-calendar-check"></i>
+                        </div>
+                        <div class="metric-info">
+                            <span class="metric-label">Overall Attendance</span>
+                            <h3 id="stat-attendance" class="metric-value">94%</h3>
+                            <span class="metric-subtext">Satisfies >80% mandate</span>
+                        </div>
+                    </div>
+
+                    <div class="metric-card glass-panel">
+                        <div class="metric-icon purple">
+                            <i class="fa-solid fa-book-open-reader"></i>
+                        </div>
+                        <div class="metric-info">
+                            <span class="metric-label">Enrolled Courses</span>
+                            <h3 id="stat-courses-count" class="metric-value">4</h3>
+                            <span class="metric-subtext">14 Total Credits</span>
+                        </div>
+                    </div>
+
+                    <div class="metric-card glass-panel">
+                        <div class="metric-icon orange">
+                            <i class="fa-solid fa-layer-group"></i>
+                        </div>
+                        <div class="metric-info">
+                            <span class="metric-label">Current Semester</span>
+                            <h3 id="stat-semester" class="metric-value">6th Sem</h3>
+                            <span id="stat-department-short" class="metric-subtext">CSE Dept</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Profile Highlights & Quick Courses Grid -->
+                <div class="dashboard-grid">
+                    
+                    <!-- Quick Profile Card -->
+                    <div class="card glass-panel profile-overview-card">
+                        <div class="card-header">
+                            <h3><i class="fa-solid fa-user"></i> Student Profile Summary</h3>
+                            <span id="reg-badge-overview" class="badge-pill">REG2026001</span>
+                        </div>
+                        <div class="profile-summary-content">
+                            <div class="profile-hero">
+                                <img id="overview-avatar" src="" alt="Student Profile" class="avatar-lg">
+                                <div class="hero-details">
+                                    <h2 id="overview-full-name">Alex Morgan</h2>
+                                    <p id="overview-email"><i class="fa-solid fa-envelope"></i> alex.morgan@university.edu</p>
+                                    <span id="overview-dept-badge" class="dept-badge">Computer Science</span>
+                                </div>
+                            </div>
+                            <div class="details-list">
+                                <div class="detail-item">
+                                    <span class="label"><i class="fa-solid fa-hashtag"></i> Register Number</span>
+                                    <span id="detail-reg" class="value font-mono">REG2026001</span>
+                                </div>
+                                <div class="detail-item">
+                                    <span class="label"><i class="fa-solid fa-building-columns"></i> Academic Department</span>
+                                    <span id="detail-dept" class="value">Computer Science & Engineering</span>
+                                </div>
+                                <div class="detail-item">
+                                    <span class="label"><i class="fa-solid fa-clock-rotate-left"></i> Year & Semester</span>
+                                    <span id="detail-year-sem" class="value">3rd Year (6th Semester)</span>
+                                </div>
+                                <div class="detail-item">
+                                    <span class="label"><i class="fa-solid fa-phone"></i> Contact Phone</span>
+                                    <span id="detail-phone" class="value">+1 (555) 234-5678</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Enrolled Courses Preview Table -->
+                    <div class="card glass-panel">
+                        <div class="card-header">
+                            <h3><i class="fa-solid fa-list-check"></i> Course Performance Summary</h3>
+                            <button class="btn-link view-tab-btn" data-target="tab-courses">View All <i class="fa-solid fa-arrow-right"></i></button>
+                        </div>
+                        <div class="table-responsive">
+                            <table class="custom-table">
+                                <thead>
+                                    <tr>
+                                        <th>Code</th>
+                                        <th>Course Title</th>
+                                        <th>Grade</th>
+                                        <th>Score</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="overview-courses-tbody">
+                                    <!-- Dynamic Rows -->
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+
+                </div>
+
+            </section>
+
+            <!-- TAB 2: COURSES & GRADES -->
+            <section id="tab-courses" class="tab-content">
+                <div class="card glass-panel">
+                    <div class="card-header">
+                        <div>
+                            <h2>Enrolled Courses & Academic Grades</h2>
+                            <p>Detailed performance report for the current academic session.</p>
+                        </div>
+                    </div>
+                    <div class="table-responsive">
+                        <table class="custom-table">
+                            <thead>
+                                <tr>
+                                    <th>Course Code</th>
+                                    <th>Course Name</th>
+                                    <th>Credits</th>
+                                    <th>Instructor</th>
+                                    <th>Score</th>
+                                    <th>Letter Grade</th>
+                                </tr>
+                            </thead>
+                            <tbody id="full-courses-tbody">
+                                <!-- Dynamic Rows -->
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </section>
+
+            <!-- TAB 3: ATTENDANCE -->
+            <section id="tab-attendance" class="tab-content">
+                <div class="card glass-panel">
+                    <div class="card-header">
+                        <div>
+                            <h2>Subject-wise Attendance Breakdown</h2>
+                            <p>Track your classroom attendance and eligibility compliance.</p>
+                        </div>
+                    </div>
+                    <div class="attendance-cards-grid" id="attendance-cards-container">
+                        <!-- Dynamic Attendance Cards -->
+                    </div>
+                </div>
+            </section>
+
+            <!-- TAB 4: MY PROFILE -->
+            <section id="tab-profile" class="tab-content">
+                <div class="card glass-panel profile-detailed-card">
+                    <div class="profile-header-banner">
+                        <div class="banner-gradient"></div>
+                        <div class="profile-hero-large">
+                            <img id="profile-avatar-large" src="" alt="Profile Large" class="avatar-xl">
+                            <div class="hero-large-info">
+                                <h2 id="profile-large-name">Student Full Name</h2>
+                                <p id="profile-large-reg" class="font-mono">REG2026001</p>
+                                <div class="tags-row">
+                                    <span id="profile-large-dept" class="badge-pill">Department</span>
+                                    <span id="profile-large-year" class="badge-pill badge-outline">3rd Year</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="profile-details-grid">
+                        <div class="profile-info-group">
+                            <label><i class="fa-solid fa-id-card"></i> Student ID / Register No.</label>
+                            <div class="info-field" id="prof-field-reg">REG2026001</div>
+                        </div>
+                        <div class="profile-info-group">
+                            <label><i class="fa-solid fa-user"></i> Full Name</label>
+                            <div class="info-field" id="prof-field-name">Alex Morgan</div>
+                        </div>
+                        <div class="profile-info-group">
+                            <label><i class="fa-solid fa-envelope"></i> Email Address</label>
+                            <div class="info-field" id="prof-field-email">alex.morgan@university.edu</div>
+                        </div>
+                        <div class="profile-info-group">
+                            <label><i class="fa-solid fa-cake-candles"></i> Age</label>
+                            <div class="info-field" id="prof-field-age">21 Years</div>
+                        </div>
+                        <div class="profile-info-group">
+                            <label><i class="fa-solid fa-building-columns"></i> Department</label>
+                            <div class="info-field" id="prof-field-dept">Computer Science & Engineering</div>
+                        </div>
+                        <div class="profile-info-group">
+                            <label><i class="fa-solid fa-graduation-cap"></i> Academic Standing</label>
+                            <div class="info-field" id="prof-field-standing">3rd Year - 6th Semester</div>
+                        </div>
+                        <div class="profile-info-group">
+                            <label><i class="fa-solid fa-phone"></i> Contact Phone</label>
+                            <div class="info-field" id="prof-field-phone">+1 (555) 234-5678</div>
+                        </div>
+                        <div class="profile-info-group">
+                            <label><i class="fa-solid fa-shield-check"></i> Security / Password</label>
+                            <div class="info-field">Protected via Bcrypt Hash</div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+        </main>
+    </div>
+
+    <!-- Application JavaScript -->
+    <script src="js/app.js"></script>
+</body>
+</html>
